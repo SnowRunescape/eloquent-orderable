@@ -11,12 +11,12 @@ trait Orderable
     {
         static::addGlobalScope(new OrderableScope);
 
-        static::creating(function ($model) {
+        static::creating(function (Model $model) {
             if ($model->shouldSortWhenCreating()) {
                 $orderColumn = $model->getOrderColumnName();
                 $maxOrder = $model->max($orderColumn) + 1;
 
-                $model->{$orderColumn} = $maxOrder;
+                $model->{$orderColumn} = ($maxOrder !== null) ? ($maxOrder + 1) : 0;
             }
         });
     }
@@ -60,12 +60,13 @@ trait Orderable
 
         DB::statement("SET @cnt = -1");
 
-        $query->update([
-            $orderColumn => self::raw("(CASE
-                WHEN `{$model->getKeyName()}` = {$model->getKey()} THEN {$order}
-                WHEN @cnt = {$beforeOrder} THEN @cnt := @cnt + 2
-                ELSE @cnt := @cnt + 1
-            END)")
-        ]);
+        $query->orderBy($model->getOrderColumnName(), $model->getSortDirection())
+            ->update([
+                $orderColumn => self::raw("(CASE
+                    WHEN `{$model->getKeyName()}` = {$model->getKey()} THEN {$order}
+                    WHEN @cnt = {$beforeOrder} THEN @cnt := @cnt + 2
+                    ELSE @cnt := @cnt + 1
+                END)")
+            ]);
     }
 }
