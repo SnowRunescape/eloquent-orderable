@@ -35,10 +35,4 @@ jobs:
         run: composer install
 
       - name: Run PHPUnit
-        env:
-          DB_DRIVE: mysql
-          DB_HOST: 127.0.0.1
-          DB_DATABASE: test_database
-          DB_USERNAME: root
-          DB_PASSWORD: 123456
         run: vendor/bin/phpunit
