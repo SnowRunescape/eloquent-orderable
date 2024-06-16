@@ -52,9 +52,9 @@ class OrderableTest extends TestCase
 
     public function testUpdateOrder()
     {
-        $post1 = Post::create(["title" => "First1 Post", "order" => 1]);
-        $post2 = Post::create(["title" => "Second Post", "order" => 2]);
-        $post3 = Post::create(["title" => "Third Post", "order" => 3]);
+        $post1 = Post::create(["title" => "First1 Post"]);
+        $post2 = Post::create(["title" => "Second Post"]);
+        $post3 = Post::create(["title" => "Third Post"]);
 
         Post::updateOrder($post2, 3);
 
