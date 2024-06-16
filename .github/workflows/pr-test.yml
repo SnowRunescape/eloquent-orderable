@@ -1,0 +1,44 @@
+name: Run Tests
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  test-runner:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: 123456
+          MYSQL_DATABASE: test_database
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: pdo_mysql
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run PHPUnit
+        env:
+          DB_DRIVE: mysql
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: test_database
+          DB_USERNAME: root
+          DB_PASSWORD: 123456
+        run: vendor/bin/phpunit
