@@ -1,4 +1,12 @@
 <phpunit colors="true">
+    <php>
+        <env name="DB_DRIVE" value="mysql"/>
+        <env name="DB_HOST" value="127.0.0.1"/>
+        <env name="DB_DATABASE" value="test_database"/>
+        <env name="DB_USERNAME" value="root"/>
+        <env name="DB_PASSWORD" value="123456"/>
+    </php>
+
     <testsuites>
         <testsuite name="tests">
             <directory>tests/</directory>
