@@ -11,12 +11,12 @@ trait Orderable
     {
         static::addGlobalScope(new OrderableScope);
 
-        static::creating(function ($model) {
+        static::creating(function (Model $model) {
             if ($model->shouldSortWhenCreating()) {
                 $orderColumn = $model->getOrderColumnName();
-                $maxOrder = $model->max($orderColumn) + 1;
+                $maxOrder = $model->max($orderColumn);
 
-                $model->{$orderColumn} = $maxOrder;
+                $model->{$orderColumn} = ($maxOrder !== null) ? ($maxOrder + 1) : 0;
             }
         });
     }

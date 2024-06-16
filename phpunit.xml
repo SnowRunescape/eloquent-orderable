@@ -1,4 +1,7 @@
-<phpunit colors="true">
+<phpunit
+    bootstrap="tests/bootstrap.php"
+    colors="true"
+>
     <php>
         <env name="DB_DRIVE" value="mysql"/>
         <env name="DB_HOST" value="127.0.0.1"/>
