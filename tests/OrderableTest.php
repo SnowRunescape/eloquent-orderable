@@ -4,7 +4,6 @@ namespace SnowRunescape\Orderable\Tests;
 
 use Illuminate\Database\Capsule\Manager as DB;
 use PHPUnit\Framework\TestCase;
-use Illuminate\Events\Dispatcher;
 use SnowRunescape\Orderable\Tests\Fixtures\Post;
 
 class OrderableTest extends TestCase
