@@ -40,7 +40,7 @@ DB::schema()->create("comments", function ($table) {
 DB::schema()->create("products", function ($table) {
     $table->increments("id");
     $table->string("title");
-    $table->integer("description");
+    $table->string("description");
     $table->integer("order");
     $table->timestamps();
 });
