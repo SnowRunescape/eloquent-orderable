@@ -13,4 +13,9 @@ class Post extends Model
         "order",
         "title",
     ];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

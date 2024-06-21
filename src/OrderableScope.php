@@ -17,6 +17,26 @@ class OrderableScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->orderBy($model->getOrderColumnName(), $model->getSortDirection());
+        $builder->ordered();
+    }
+
+    /**
+     * Extend the query builder with the needed functions.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $builder
+     * @return void
+     */
+    public function extend(Builder $builder)
+    {
+        $builder->macro("ordered", function (Builder $builder) {
+            return $builder->orderBy(
+                $builder->getModel()->getOrderColumnName(),
+                $builder->getModel()->getSortDirection()
+            );
+        });
+
+        $builder->macro("withoutOrdered", function (Builder $builder) {
+            return $builder->withoutGlobalScope($this);
+        });
     }
 }

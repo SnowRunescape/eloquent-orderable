@@ -14,7 +14,10 @@ trait Orderable
         static::creating(function (Model $model) {
             if ($model->shouldSortWhenCreating()) {
                 $orderColumn = $model->getOrderColumnName();
-                $maxOrder = $model->max($orderColumn);
+
+                $query = self::buildOrderQuery($model);
+
+                $maxOrder = $query->max($orderColumn);
 
                 $model->{$orderColumn} = ($maxOrder !== null) ? ($maxOrder + 1) : 0;
             }
@@ -28,12 +31,17 @@ trait Orderable
 
     public function getSortDirection(): string
     {
-        return $this->orderableOptions["sort_direction"] ?? "ASC";
+        return $this->sortable["sort_direction"] ?? "ASC";
     }
 
     public function getScopeColumns(): array
     {
         return $this->sortable["scope_columns"] ?? [];
+    }
+
+    public function getWhereConditions(): array
+    {
+        return $this->sortable["where_conditions"] ?? [];
     }
 
     public function shouldSortWhenCreating(): bool
@@ -49,8 +57,25 @@ trait Orderable
     public static function updateOrder(Model $model, int $order)
     {
         $orderColumn = $model->getOrderColumnName();
-        $scopeColumns = $model->getScopeColumns();
         $beforeOrder = $order - 1;
+
+        $query = self::buildOrderQuery($model);
+
+        DB::statement("SET @cnt = -1");
+
+        $query->ordered()->update([
+            $orderColumn => self::raw("(CASE
+                WHEN `{$model->getKeyName()}` = {$model->getKey()} THEN {$order}
+                WHEN @cnt = {$beforeOrder} THEN @cnt := @cnt + 2
+                ELSE @cnt := @cnt + 1
+            END)")
+        ]);
+    }
+
+    public static function buildOrderQuery(Model $model)
+    {
+        $scopeColumns = $model->getScopeColumns();
+        $whereConditions = $model->getWhereConditions();
 
         $query = self::query();
 
@@ -58,15 +83,10 @@ trait Orderable
             $query->where($column, $model->{$column});
         }
 
-        DB::statement("SET @cnt = -1");
+        foreach ($whereConditions as $condition) {
+            $query->where(...$condition);
+        }
 
-        $query->orderBy($model->getOrderColumnName(), $model->getSortDirection())
-            ->update([
-                $orderColumn => self::raw("(CASE
-                    WHEN `{$model->getKeyName()}` = {$model->getKey()} THEN {$order}
-                    WHEN @cnt = {$beforeOrder} THEN @cnt := @cnt + 2
-                    ELSE @cnt := @cnt + 1
-                END)")
-            ]);
+        return $query;
     }
 }
