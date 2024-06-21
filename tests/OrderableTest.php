@@ -144,8 +144,8 @@ class OrderableTest extends TestCase
             "description" => "Description of First Product",
         ]);
 
-        $this->assertEquals("Title of First Product", $product->title);
-        $this->assertEquals("Description of First Product", $product->description);
-        $this->assertNull($product->order);
+        $this->assertEquals("Title of First Product", $product->fresh()->title);
+        $this->assertEquals("Description of First Product", $product->fresh()->description);
+        $this->assertNull($product->fresh()->order);
     }
 }
