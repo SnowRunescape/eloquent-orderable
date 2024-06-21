@@ -72,7 +72,7 @@ trait Orderable
         ]);
     }
 
-    public static function buildOrderQuery(Model $model)
+    private static function buildOrderQuery(Model $model)
     {
         $scopeColumns = $model->getScopeColumns();
         $whereConditions = $model->getWhereConditions();

@@ -19,6 +19,7 @@ $db->bootEloquent();
 
 DB::schema()->dropIfExists("posts");
 DB::schema()->dropIfExists("comments");
+DB::schema()->dropIfExists("products");
 
 DB::schema()->create("posts", function ($table) {
     $table->increments("id");
@@ -34,4 +35,12 @@ DB::schema()->create("comments", function ($table) {
     $table->timestamps();
     $table->integer("order");
     $table->integer("status");
+});
+
+DB::schema()->create("products", function ($table) {
+    $table->increments("id");
+    $table->string("title");
+    $table->integer("description");
+    $table->integer("order");
+    $table->timestamps();
 });

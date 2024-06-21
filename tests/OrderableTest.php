@@ -6,6 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use PHPUnit\Framework\TestCase;
 use SnowRunescape\Orderable\Tests\Fixtures\Comment;
 use SnowRunescape\Orderable\Tests\Fixtures\Post;
+use SnowRunescape\Orderable\Tests\Fixtures\Product;
 
 class OrderableTest extends TestCase
 {
@@ -134,5 +135,17 @@ class OrderableTest extends TestCase
         $comment = Comment::create(["post_id" => 2, "comment" => "Four Comment on Second Post", "status" => Comment::STATUS["active"]]);
 
         $this->assertEquals(2, $comment->fresh()->order);
+    }
+
+    public function testSortableWhenCreatingFalse()
+    {
+        $product = Product::create([
+            "title" => "Title of First Product",
+            "description" => "Description of First Product",
+        ]);
+
+        $this->assertEquals("Title of First Product", $product->title);
+        $this->assertEquals("Description of First Product", $product->description);
+        $this->assertNull($product->order);
     }
 }
