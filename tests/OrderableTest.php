@@ -139,13 +139,19 @@ class OrderableTest extends TestCase
 
     public function testSortableWhenCreatingFalse()
     {
-        $product = Product::create([
+        $product1 = Product::create([
             "title" => "Title of First Product",
             "description" => "Description of First Product",
         ]);
 
-        $this->assertEquals("Title of First Product", $product->fresh()->title);
-        $this->assertEquals("Description of First Product", $product->fresh()->description);
-        $this->assertNull($product->fresh()->order);
+        $product2 = Product::create([
+            "title" => "Title of Second Product",
+            "description" => "Description of Second Product",
+        ]);
+
+        $this->assertEquals("Title of First Product", $product1->fresh()->title);
+        $this->assertEquals("Description of First Product", $product1->fresh()->description);
+        $this->assertEquals(0, $product1->fresh()->order);
+        $this->assertEquals(0, $product2->fresh()->order);
     }
 }
