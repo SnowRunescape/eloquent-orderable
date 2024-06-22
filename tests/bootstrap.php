@@ -24,7 +24,7 @@ DB::schema()->dropIfExists("products");
 DB::schema()->create("posts", function ($table) {
     $table->increments("id");
     $table->string("title");
-    $table->integer("order");
+    $table->integer("order")->default(0);
     $table->timestamps();
 });
 
@@ -33,7 +33,7 @@ DB::schema()->create("comments", function ($table) {
     $table->integer("post_id");
     $table->string("comment");
     $table->timestamps();
-    $table->integer("order");
+    $table->integer("order")->default(0);
     $table->integer("status");
 });
 
@@ -41,6 +41,6 @@ DB::schema()->create("products", function ($table) {
     $table->increments("id");
     $table->string("title");
     $table->string("description");
-    $table->integer("order");
+    $table->integer("order")->default(0);
     $table->timestamps();
 });
