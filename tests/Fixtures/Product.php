@@ -5,17 +5,17 @@ namespace SnowRunescape\Orderable\Tests\Fixtures;
 use Illuminate\Database\Eloquent\Model;
 use SnowRunescape\Orderable\Orderable;
 
-class Post extends Model
+class Product extends Model
 {
     use Orderable;
 
     protected $fillable = [
-        "order",
         "title",
+        "description",
+        "order",
     ];
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
+    protected $sortable = [
+        "sort_when_creating" => false,
+    ];
 }
